@@ -1,6 +1,7 @@
 package com.commerce.ecommercerafa.entity;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
