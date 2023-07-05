@@ -1,14 +1,17 @@
 package com.commerce.ecommercerafa.controller;
 
-import com.commerce.ecommercerafa.controller.model.ProductPiceResponse;
-import com.commerce.ecommercerafa.repository.model.Prices;
-import com.commerce.ecommercerafa.service.ProductPriceInterface;
+import com.commerce.ecommercerafa.controller.entity.ProductPriceRequest;
+import com.commerce.ecommercerafa.controller.entity.ProductPriceResponse;
+import com.commerce.ecommercerafa.entity.Prices;
+import com.commerce.ecommercerafa.service.ProductPriceService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -16,21 +19,27 @@ import java.util.List;
 public class ProductPriceController {
 
     @Autowired
-    ProductPriceInterface productPriceInterface;
+    ProductPriceService productPriceService;
 
-    @GetMapping
-    public @ResponseBody ProductPiceResponse getProductPrice(@RequestParam() @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime currentDate,
-                                                             @RequestParam() Integer product,
-                                                             @RequestParam() Integer brand) {
+    @PostMapping
+    @ApiOperation(value = "Get product price in a date")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Product price found"),
+            @ApiResponse(code = 404, message = "Product prirce not found")})
+    public ResponseEntity<ProductPriceResponse> getProductPrice(@RequestBody ProductPriceRequest priceRequest) {
 
-        List<Prices> ret = productPriceInterface.getAll();
+        List<Prices> dataPrices = productPriceService.findPricesByBrandAndDate(priceRequest.getBrandId(),
+                priceRequest.getProductId(),
+                priceRequest.getCurrentDate());
 
-        return ProductPiceResponse.builder()
-                .brandId(1)
-                .productId(1)
-                .priceId(1)
-                .finalPrice(23.9)
-                .applyDate(new Date())
-                .build();
+        ProductPriceResponse response =
+                productPriceService.buildResponse(
+                        productPriceService.findBestPrice(dataPrices),priceRequest.getCurrentDate());
+
+        if(response != null){
+            return ResponseEntity.ok(response);
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }

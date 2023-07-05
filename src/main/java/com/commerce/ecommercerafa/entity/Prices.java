@@ -1,4 +1,4 @@
-package com.commerce.ecommercerafa.repository.model;
+package com.commerce.ecommercerafa.entity;
 
 
 import lombok.Getter;
@@ -6,29 +6,30 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "PRICES")
 @Getter
 @Setter
 public class Prices {
-
-    //ID, BRAND_ID, STAR_DATE, END_DATE, PRICE_LIST, PRODUCT_ID, PRIORITY, PRICE, CURR
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(name="BRAND_ID")
-    private Integer brandId;
+    @ManyToOne
+    @JoinColumn(name = "BRAND_ID", nullable = false)
+    private Brands brand;
     @Column(name="STAR_DATE")
-    private Date startDate;
+    private LocalDateTime startDate;
     @Column(name="END_DATE")
-    private Date endDate;
+    private LocalDateTime endDate;
     @Column(name="PRICE_LIST")
-    private Integer priceList;
+    private Long priceList;
     @Column(name="PRODUCT_ID")
-    private Integer productId;
+    private Long productId;
     @Column(name="PRIORITY")
-    private Integer priority;
+    private Long priority;
     @Column(name="PRICE")
     private Double price;
     @Column(name="CURR")
