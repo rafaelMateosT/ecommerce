@@ -1,8 +1,8 @@
 package com.commerce.ecommercerafa.service;
 
 import com.commerce.ecommercerafa.controller.entity.ProductPriceResponse;
-import com.commerce.ecommercerafa.repository.PriceRepository;
 import com.commerce.ecommercerafa.entity.Prices;
+import com.commerce.ecommercerafa.repository.PriceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

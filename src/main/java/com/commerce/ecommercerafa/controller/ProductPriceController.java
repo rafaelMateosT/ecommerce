@@ -4,16 +4,16 @@ import com.commerce.ecommercerafa.controller.entity.ProductPriceRequest;
 import com.commerce.ecommercerafa.controller.entity.ProductPriceResponse;
 import com.commerce.ecommercerafa.entity.Prices;
 import com.commerce.ecommercerafa.service.ProductPriceService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -34,8 +34,6 @@ public class ProductPriceController {
         List<Prices> dataPrices = productPriceService.findPricesByBrandAndDate(priceRequest.getBrandId(),
                 priceRequest.getProductId(),
                 priceRequest.getCurrentDate());
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-
 
         ProductPriceResponse response =
                 productPriceService.buildResponse(
