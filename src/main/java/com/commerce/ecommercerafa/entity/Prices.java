@@ -25,19 +25,19 @@ public class Prices {
     @ManyToOne
     @JoinColumn(name = "BRAND_ID", nullable = false)
     private Brands brand;
-    @Column(name="STAR_DATE")
+    @Column(name = "STAR_DATE")
     private LocalDateTime startDate;
-    @Column(name="END_DATE")
+    @Column(name = "END_DATE")
     private LocalDateTime endDate;
-    @Column(name="PRICE_LIST")
+    @Column(name = "PRICE_LIST")
     private Long priceList;
-    @Column(name="PRODUCT_ID")
+    @Column(name = "PRODUCT_ID")
     private Long productId;
-    @Column(name="PRIORITY")
+    @Column(name = "PRIORITY")
     private Long priority;
-    @Column(name="PRICE")
+    @Column(name = "PRICE")
     private Double price;
-    @Column(name="CURR")
+    @Column(name = "CURR")
     private String curr;
 
 }

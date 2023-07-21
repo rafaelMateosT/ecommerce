@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping(value = "/product/price")
@@ -28,21 +28,35 @@ public class ProductPriceController {
     @ApiOperation(value = "Get product price in a date")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Product price found"),
-            @ApiResponse(code = 404, message = "Product prirce not found")})
+            @ApiResponse(code = 404, message = "Product price not found")})
     public ResponseEntity<ProductPriceResponse> getProductPrice(@RequestBody ProductPriceRequest priceRequest) {
 
-        List<Prices> dataPrices = productPriceService.findPricesByBrandAndDate(priceRequest.getBrandId(),
+        Prices dataPrices = productPriceService.findPricesByBrandAndDate(priceRequest.getBrandId(),
                 priceRequest.getProductId(),
                 priceRequest.getCurrentDate());
 
         ProductPriceResponse response =
-                productPriceService.buildResponse(
-                        productPriceService.findBestPrice(dataPrices),priceRequest.getCurrentDate());
+                buildResponse(
+                        dataPrices, priceRequest.getCurrentDate());
 
-        if(response != null){
+        if (response != null) {
             return ResponseEntity.ok(response);
-        }else{
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    public ProductPriceResponse buildResponse(Prices price, LocalDateTime applyDate) {
+        if (price != null) {
+            return ProductPriceResponse.builder()
+                    .brandId(price.getBrand().getId())
+                    .finalPrice(price.getPrice())
+                    .applyDate(applyDate)
+                    .productId(price.getProductId())
+                    .priceId(price.getId())
+                    .build();
+        } else {
+            return null;
         }
     }
 }

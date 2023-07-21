@@ -3,6 +3,7 @@ package com.commerce.ecommercerafa;
 import com.commerce.ecommercerafa.controller.ProductPriceController;
 import com.commerce.ecommercerafa.controller.entity.ProductPriceRequest;
 import com.commerce.ecommercerafa.controller.entity.ProductPriceResponse;
+import com.commerce.ecommercerafa.entity.Brands;
 import com.commerce.ecommercerafa.entity.Prices;
 import com.commerce.ecommercerafa.service.ProductPriceService;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,20 +39,31 @@ class ProductPriceControllerTest {
 
     @Test
     void testGetProductPrice_Success() {
-        ProductPriceRequest priceRequest = ProductPriceRequest.builder().productId(1L).brandId(1L).currentDate(LocalDateTime.now()).build();
-        ProductPriceResponse expectedResponse = new ProductPriceResponse();
-        Prices prices = new Prices();
-        prices.setPrice(1.1);
-        List<Prices> mockPrices = new ArrayList<>();
-        mockPrices.add(prices);
+        ProductPriceRequest priceRequest =
+                ProductPriceRequest.builder().productId(1L).brandId(1L).currentDate(LocalDateTime.now()).build();
 
+        ProductPriceResponse expectedResponse = new ProductPriceResponse();
+        expectedResponse.setProductId(1L);
+        expectedResponse.setFinalPrice(1.1);
+        expectedResponse.setProductId(1L);
+        expectedResponse.setBrandId(1L);
+        expectedResponse.setApplyDate(priceRequest.getCurrentDate());
+        expectedResponse.setPriceId(1L);
+
+        Prices prices = new Prices();
+        Brands brand = new Brands();
+        brand.setId(1L);
+        brand.setName("PRUEBA");
+
+        prices.setPrice(1.1);
+        prices.setProductId(1L);
+        prices.setPriceList(1L);
+        prices.setId(1L);
+        prices.setCurr("PRUEBAS");
+        prices.setBrand(brand);
 
         when(productPriceService.findPricesByBrandAndDate(anyLong(), anyLong(), any()))
-                .thenReturn(mockPrices);
-        when(productPriceService.findBestPrice(mockPrices))
                 .thenReturn(prices);
-        when(productPriceService.buildResponse(any(),any()))
-                .thenReturn(expectedResponse);
 
         // Act
         ResponseEntity<ProductPriceResponse> response = productPriceController.getProductPrice(priceRequest);
@@ -66,19 +78,10 @@ class ProductPriceControllerTest {
     void testGetProductPrice_NotFound() {
         ProductPriceRequest priceRequest = ProductPriceRequest.builder().productId(1L).brandId(1L).currentDate(LocalDateTime.now()).build();
         ProductPriceResponse expectedResponse = new ProductPriceResponse();
-        Prices prices = new Prices();
-        prices.setPrice(1.1);
-        List<Prices> mockPrices = new ArrayList<>();
-        mockPrices.add(prices);
-
+        Prices prices = null;
 
         when(productPriceService.findPricesByBrandAndDate(anyLong(), anyLong(), any()))
-                .thenReturn(mockPrices);
-        when(productPriceService.findBestPrice(mockPrices))
                 .thenReturn(prices);
-        when(productPriceService.buildResponse(any(),any()))
-                .thenReturn(null);
-
         // Act
         ResponseEntity<ProductPriceResponse> response = productPriceController.getProductPrice(priceRequest);
 
